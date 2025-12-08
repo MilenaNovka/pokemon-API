@@ -1,0 +1,12 @@
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+
+  background: #000;
+  padding: 20px;
+
+  background-image: url('./assets/pokemon-background.jpg');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
