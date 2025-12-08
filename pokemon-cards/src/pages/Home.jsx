@@ -6,20 +6,21 @@ export default function Home() {
     const [pokemons, setPokemons] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
+    const [hasMore, setHasMore] = useState(true);
 
     async function fetchPokemons(p) {
+        if (loading) return;
+        
         setLoading(true);
-        setErrorMsg("");
 
         try {
+            const offset = (p - 1) *20;
             const response = await axios.get(
-                `https://pokeapi.co/api/v2/pokemon?page=${p}&limit=18`
+                `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`
             );
 
             if (!response.data.results || response.data.results.length === 0) {
-                setErrorMsg("Página inválida! Tente outra.");
-                setPokemons([]);
+                setHasMore(false);
             } else {
                 const pokemonDetails = await Promise.all(
                     response.data.results.map(async (pokemon) => {
@@ -27,63 +28,35 @@ export default function Home() {
                         return details.data;
                     })
                 );
-                setPokemons(pokemonDetails);
+                setPokemons((prev) => [...prev, ...pokemonDetails]);
             }
         } catch (error) {
-            setErrorMsg("Erro ao buscar pokémons!");
+            console.error("Erro ao buscar pokémons!");
         }
         setLoading(false);
     }
 
     useEffect(() => {
-        async function loadFirstPage() {
-            setLoading(true);
-            setErrorMsg("");
-
-            try {
-                const response = await axios.get(
-                    "https://pokeapi.co/api/v2/pokemon?page=1&limit=18"
-                );
-                
-                const pokemonDetails = await Promise.all(
-                    response.data.results.map(async (pokemon) => {
-                        const details = await axios.get(pokemon.url);
-                        return details.data;
-                    })
-                );
-                setPokemons(pokemonDetails);
-            } catch (error) {
-                setErrorMsg("Erro ao buscar pokémons!");
-            }
-            setLoading(false);
-        }
-        loadFirstPage();
-    }, []);
-
-    function handleSearch() {
-        if (!page || page < 1) {
-            setErrorMsg("Digite um número de página válido");
-            return;
-        }
         fetchPokemons(page);
-    }
+    }, [page]);
+
+    // Paginação com loop infinito
+    useEffect(() => {
+        function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                if (hasMore && !loading) {
+                    setPage((prev) => prev + 1);
+                }
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loading, hasMore]);
 
     return (
         <div className="container">
-            <h1>Pokémon Cards</h1>
-
-            <div className="search-box">
-                <input
-                    type="number"
-                    placeholder="Digite uma página"
-                    value={page}
-                    onChange={(e) => setPage(e.target.value)}
-                />
-                <button onClick={handleSearch}>Buscar</button>
-            </div>
-
-            {loading && <p className="loading">Carregando...</p>}
-            {errorMsg && <p className="loading">{errorMsg}</p>}
+            <h1>Pokémon</h1>
 
             <div className="cards-grid">
                 {pokemons.map((poke) => (
@@ -96,6 +69,9 @@ export default function Home() {
                     />
                 ))}
             </div>
+
+            {loading && <p className="loading">Carregando mais pokémons...</p>}
+            {!hasMore && <p className="loading">Todos os pokémons foram carregados!</p>}
         </div>
     );
 }

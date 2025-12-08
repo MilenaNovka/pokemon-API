@@ -5,7 +5,7 @@ export default function Card({name, image, id, types}){
         <div className="card">
             <img src={image} alt={name} />
             <h2>{name}</h2>
-            <p><strong>N°</strong> #{id}</p>
+            <p><strong>Pokédex</strong> #{id}</p>
             <p><strong>Tipo:</strong> {types}</p>
         </div>
     );
