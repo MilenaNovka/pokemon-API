@@ -1,0 +1,60 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+
+  background: #000;
+  padding: 20px;
+
+  background-image: url('./assets/pokemon-background.jpg');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.cards-grid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.card{
+  background: #ffffffc0;
+  border-radius: 20px;
+  padding: 5px;
+  color: black;
+  transition: all 200ms ease-in-out;
+}
+
+.card:hover{
+  transform: scale(1.02);
+}
+
+.card img{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.card h2{
+  font-size: 25px;
+  letter-spacing: 2px;
+}
+
+.card p{
+  font-size: 14px;
+  color: black;
+  font-weight: bold;
+}
+
+
+.card strong{
+  color: #103481;
+  font-weight: bold;
+}
