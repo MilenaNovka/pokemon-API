@@ -40,7 +40,6 @@ export default function Home() {
         fetchPokemons(page);
     }, [page]);
 
-    // Paginação com loop infinito
     useEffect(() => {
         function handleScroll() {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
@@ -56,7 +55,7 @@ export default function Home() {
 
     return (
         <div className="container">
-            <h1>Pokémon</h1>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1280px-International_Pok%C3%A9mon_logo.svg.png" alt="Logo do Pokémon"/>
 
             <div className="cards-grid">
                 {pokemons.map((poke) => (
